@@ -12,3 +12,5 @@ cd /sys/bus/w1/devices/
 cd 28*
 less w1_slave
 ```
+
+Then run the *ds18b20.py* file.
