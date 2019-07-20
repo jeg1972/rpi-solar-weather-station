@@ -25,7 +25,7 @@ device_folder = glob.glob(base_dir + '28*')[0]
 device_file = device_folder + '/w1_slave'
 
 # Configure the endpoints, certificates, topic and message for AWS IoT
-iot_endpoint = "" # Custom endpoint to connect to AWS IoT
+iot_endpoint = "a18p2ffxiq3zuq-ats.iot.eu-west-1.amazonaws.com" # Custom endpoint to connect to AWS IoT
 iot_rootca = "/home/pi/Downloads/root-CA.crt" # Amazon CA Root Certificate
 iot_cert = "/home/pi/Downloads/weather-pi.cert.pem" # AWS IoT Certificate
 iot_private_key = "/home/pi/Downloads/weather-pi.private.key" # Private Key for IoT Thing
@@ -93,6 +93,6 @@ while True:
      myAWSIoTMQTTClient.publish(iot_topic, messageJson, 1)
      print('PUBLISHED TOPIC: %s: %s\n' % (iot_topic, messageJson))
      loopCount += 1
-time.sleep(5)
+time.sleep(10)
 
 myAWSIoTMQTTClient.disconnect()
