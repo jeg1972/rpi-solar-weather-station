@@ -25,7 +25,7 @@ device_folder = glob.glob(base_dir + '28*')[0]
 device_file = device_folder + '/w1_slave'
 
 # Configure the endpoints, certificates, topic and message for AWS IoT
-iot_endpoint = "a18p2ffxiq3zuq-ats.iot.eu-west-1.amazonaws.com" # Custom endpoint to connect to AWS IoT
+iot_endpoint = "" # Custom endpoint to connect to AWS IoT
 iot_rootca = "/home/pi/Downloads/root-CA.crt" # Amazon CA Root Certificate
 iot_cert = "/home/pi/Downloads/weather-pi.cert.pem" # AWS IoT Certificate
 iot_private_key = "/home/pi/Downloads/weather-pi.private.key" # Private Key for IoT Thing
@@ -61,12 +61,12 @@ def customCallback(client, userdata, message):
     print "-----------------------------------\n\n"
 
 # Configure logging
-#logger = logging.getLogger("AWSIoTPythonSDK.core")
-#logger.setLevel(logging.DEBUG)
-#streamHandler = logging.StreamHandler()
-#formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-#streamHandler.setFormatter(formatter)
-#logger.addHandler(streamHandler)
+logger = logging.getLogger("AWSIoTPythonSDK.core")
+logger.setLevel(logging.DEBUG)
+streamHandler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+streamHandler.setFormatter(formatter)
+logger.addHandler(streamHandler)
 
 myAWSIoTMQTTClient = AWSIoTMQTTClient(iot_clientid)
 myAWSIoTMQTTClient.configureEndpoint(iot_endpoint, 8883)
@@ -76,8 +76,8 @@ myAWSIoTMQTTClient.configureCredentials(iot_rootca, iot_private_key, iot_cert)
 myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
 myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
 myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
-myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
-myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
+myAWSIoTMQTTClient.configureConnectDisconnectTimeout(300)  # 300 sec
+myAWSIoTMQTTClient.configureMQTTOperationTimeout(150)  # 150 sec
 
 # Connect and subscribe to AWS IoT
 myAWSIoTMQTTClient.connect()
@@ -93,6 +93,6 @@ while True:
      myAWSIoTMQTTClient.publish(iot_topic, messageJson, 1)
      print('PUBLISHED TOPIC: %s: %s\n' % (iot_topic, messageJson))
      loopCount += 1
-time.sleep(10)
+     time.sleep(60)
 
 myAWSIoTMQTTClient.disconnect()
